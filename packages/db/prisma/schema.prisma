@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../../../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Job {
+  id          String    @id @default(cuid())
+  type        String
+  payload     Json
+  status      String    @default("PENDING") // PENDING, RUNNING, SUCCESS, FAILED, DLQ
+  attempts    Int       @default(0)
+  maxAttempts Int       @default(5)
+  runAfter    DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  lastError   String?
+}
+
+model recurringJob {
+  id              String    @id @default(cuid())
+  name            String
+  type            String
+  payload         Json
+  attempts        Int       @default(0)
+  maxAttempts     Int       @default(5)
+  lastRunAt       DateTime?
+  createdAt       DateTime  @default(now())
+  lastError       String?
+  intervalSeconds Int
+  enabled         Boolean   @default(true)
+}
