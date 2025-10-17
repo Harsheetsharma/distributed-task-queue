@@ -48,7 +48,7 @@ async function startServer() {
 
 
 
-    app.post('/postjob', async (req, res) => {
+    app.post('/normalJobs', async (req, res) => {
         try {
             const { type, payload = {}, runAfter = null, maxAttempts = 5 } = req.body;
             if (!type) {
@@ -77,6 +77,41 @@ async function startServer() {
             return res.status(500).json({ error: "job creation failed" });
         }
     });
+
+    app.post('/recurringJobs', async (req, res) => {
+        try {
+            const { name, type, payload, frequecyDuration, keyWord, whenToRun } = req.body;
+            const recurJobCheck = await prisma.recurringJob.findFirst({
+                where: {
+                    keyword: keyWord
+                }
+            })
+            if (recurJobCheck) {
+                return res.status(409).send({
+                    message: "Job already exists, choose different name!"
+                })
+
+            }
+            const recJob = await prisma.recurringJob.create({
+                data: {
+                    name,
+                    payload,
+                    type,
+                    intervalSeconds: frequecyDuration,
+                    keyword: keyWord,
+                    whenToRun
+                }
+            })
+            res.status(200).send({
+                message: "recurring Job created!",
+                id: recJob.id
+            })
+
+        } catch (e) {
+            res.status(500).json({ error: "Internal server error" })
+        }
+
+    })
 
     app.get("/jobs/:id", async (req, res) => {
         const id = req.params.id;

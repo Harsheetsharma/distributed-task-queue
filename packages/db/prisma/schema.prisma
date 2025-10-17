@@ -32,11 +32,14 @@ model recurringJob {
   name            String
   type            String
   payload         Json
+  keyword         String    @unique
   attempts        Int       @default(0)
   maxAttempts     Int       @default(5)
   lastRunAt       DateTime?
   createdAt       DateTime  @default(now())
+  runAfter        DateTime?
   lastError       String?
   intervalSeconds Int
+  whenToRun       DateTime  @default(now())
   enabled         Boolean   @default(true)
 }

@@ -189,6 +189,56 @@ setInterval(() => {
 
 // }
 
+async function FirstTimeCheckAndEnqueueRecurringJobs() {
+    const now = new Date();
+    let arrayOfRecurringJobs: { recurringJobsId: string, recurringJobsInterval: number }[] = [];
+    const recurJob = await prisma.recurringJob.findMany({
+        where: {
+            whenToRun: {
+                lte: now
+            }
+        }
+    })
+    if (!recurJob) {
+        return console.log("could not found the job");
+    }
+
+    if ((await recurJob).length > 0) {
+        for (const key of recurJob) {
+            const isitTime = key.whenToRun;
+            if (!isitTime || isitTime < now) {
+                const update = await prisma.recurringJob.update({
+                    where: {
+                        id: key.id
+                    }, data: {
+                        lastRunAt: now,
+                        whenToRun: new Date(now.getTime() + key.intervalSeconds)
+                    }
+                })
+                arrayOfRecurringJobs.push({ recurringJobsId: key?.id, recurringJobsInterval: key.intervalSeconds })
+            }
+        }
+
+    }
+
+    async function runJobBasedOnIntervalSeconds() {
+        for (let i = 0; i < arrayOfRecurringJobs.length; i++) {
+            setInterval(async () => {
+                const response = await prisma.recurringJob.findUnique({
+                    where: {
+                        id: arrayOfRecurringJobs[i].recurringJobsId
+                    }
+                })
+                console.log("processing job", response?.id);
+            }, arrayOfRecurringJobs[i].recurringJobsInterval)
+        }
+    }
+
+    runJobBasedOnIntervalSeconds();
+}
+
+FirstTimeCheckAndEnqueueRecurringJobs();
+
 runWorker().catch((e) => {
     console.error("Worker failed:", e);
     process.exit(1);
