@@ -2,10 +2,15 @@ import express from "express";
 import { createClient } from 'redis';
 import prisma from "../../db/index.js";
 import { connect } from "http2";
+import cors from "cors";
 // import prisma from "@db/index"
 const app = express();
 app.use(express.json());
-
+app.use(cors({
+    origin: "http://localhost:3000", // Next.js frontend
+    methods: ["GET", "POST", "PUT", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+}));
 const REDIS_QUEUE_KEY = "jobs:queue";
 const REDIS_DLQ_QUEUE_KEY = "jobs:dlq";
 

@@ -142,7 +142,7 @@ async function ScheduleDbCheck() {
 
 setInterval(() => {
     ScheduleDbCheck();
-}, 60_000)
+}, 60_000)//one hour interval
 
 
 // async function checkAndEnqueueRecurringJobs() {
@@ -190,6 +190,7 @@ setInterval(() => {
 // }
 
 async function FirstTimeCheckAndEnqueueRecurringJobs() {
+    console.log("inside FirstTimeCheckAndEnqueueRecurringJobs!")
     const now = new Date();
     let arrayOfRecurringJobs: { recurringJobsId: string, recurringJobsInterval: number }[] = [];
     const recurJob = await prisma.recurringJob.findMany({
@@ -222,6 +223,7 @@ async function FirstTimeCheckAndEnqueueRecurringJobs() {
     }
 
     async function runJobBasedOnIntervalSeconds() {
+        console.log("inside runJobBasedOnIntervalSeconds!")
         for (let i = 0; i < arrayOfRecurringJobs.length; i++) {
             setInterval(async () => {
                 const response = await prisma.recurringJob.findUnique({
