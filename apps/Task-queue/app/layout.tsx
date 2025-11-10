@@ -1,5 +1,7 @@
+"use client";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { RecoilRoot } from "recoil";
 import "./global.css";
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
@@ -23,7 +25,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <RecoilRoot>
+        <body>{children}</body>
+      </RecoilRoot>
     </html>
   );
 }

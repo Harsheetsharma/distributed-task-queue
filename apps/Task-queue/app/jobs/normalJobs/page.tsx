@@ -4,9 +4,11 @@ import prisma from "../../../../../packages/db/index";
 import axios from "axios";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
-
+import { JobsId } from "../../../../../packages/store/src/id";
+import { useRecoilState } from "recoil";
 export default function () {
   const router = useRouter();
+  const [status, setStatus] = useRecoilState(JobsId);
   const [triggerHover, setTringgerHover] = useState(false);
   const [jobName, setJobName] = useState("");
   const [jobType, setJobType] = useState("");
@@ -25,9 +27,10 @@ export default function () {
     if (!response) {
       console.log("could not sent the request!");
     }
-    alert("your jobs is created!");
-    router.push("/alljobs");
+    // alert("your jobs is created!");
     console.log(response);
+    setStatus(response.data.id);
+    router.push("/allJobs");
   }
 
   useEffect(() => {});
