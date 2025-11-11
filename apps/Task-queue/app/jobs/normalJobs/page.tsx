@@ -1,14 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
-import prisma from "../../../../../packages/db/index";
+// import prisma from "../../../../../packages/db/index";
 import axios from "axios";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { JobsId } from "../../../../../packages/store/src/id";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
+// import { getRecoil } from "recoil";
+// import { recoilVersion } from "recoil";
+
 export default function () {
   const router = useRouter();
-  const [status, setStatus] = useRecoilState(JobsId);
+  const setStatus = useSetRecoilState(JobsId);
   const [triggerHover, setTringgerHover] = useState(false);
   const [jobName, setJobName] = useState("");
   const [jobType, setJobType] = useState("");
