@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { JobsId } from "../../../../../packages/store/dist/id";
 import { useRecoilState, useSetRecoilState } from "recoil";
 // import { getRecoil } from "recoil";
@@ -31,9 +32,10 @@ export default function () {
       console.log("could not sent the request!");
     }
     // alert("your jobs is created!");
-    console.log(response);
     setStatus(response.data.id);
-    router.push("/allJobs");
+    console.log(response.data.id);
+    const jobId = response?.data?.id;
+    router.push(`/jobs/allJobs?jobId=${jobId}`);
   }
 
   useEffect(() => {});
