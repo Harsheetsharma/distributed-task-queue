@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { JobsId } from "../../../../../packages/store/src/id";
+import { JobsId } from "../../../../../packages/store/dist/id";
 import { useRecoilState, useSetRecoilState } from "recoil";
 // import { getRecoil } from "recoil";
 // import { recoilVersion } from "recoil";
