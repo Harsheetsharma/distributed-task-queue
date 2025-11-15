@@ -12,10 +12,12 @@ export default function () {
   const [status, setStatus] = useState("");
   console.log(Jobid);
   useEffect(() => {
-    if (!Jobid) return;
+    if (!Jobid && jobId) return;
+
+    let interval: NodeJS.Timeout | null = null;
     const fetchJob = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/jobs/${Jobid}`);
+        const response = await axios.get(`http://localhost:4000/jobs/${jobId}`);
         setStatus(response.data.status);
       } catch (err) {
         console.error("Failed to fetch job status:", err);
@@ -28,11 +30,13 @@ export default function () {
     // Then fetch every 2 seconds (2000 ms)
 
     if (status !== "SUCCESS") {
-      var interval = setInterval(fetchJob, 2000);
+      interval = setInterval(fetchJob, 2000);
     }
     // Cleanup on unmount
-    return () => clearInterval(interval);
-  }, [Jobid]);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [Jobid, status]);
 
   return (
     <div>
