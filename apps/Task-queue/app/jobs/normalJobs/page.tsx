@@ -20,14 +20,22 @@ export default function () {
   const [runAfter, setRunAfter] = useState("");
   const [maxAttempts, setMaxAttempts] = useState(0);
   async function sendJobRequest() {
+    const ParsedPayload = (() => {
+      try {
+        return JSON.parse(payload);
+      } catch {
+        return { raw: payload };
+      }
+    })();
+
     event?.preventDefault();
     const response = await axios.post("http://localhost:4000/normalJobs", {
       type: jobType,
-      payload: payload,
+      payload: ParsedPayload,
       runAfter: runAfter,
       maxAttempts,
     });
-
+    // response
     if (!response) {
       console.log("could not sent the request!");
     }

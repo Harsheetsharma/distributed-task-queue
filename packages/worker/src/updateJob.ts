@@ -142,7 +142,7 @@ async function ScheduleDbCheck() {
 
 setInterval(() => {
     ScheduleDbCheck();
-}, 60_000)//one hour interval
+}, 10_000)//one hour interval
 
 
 // async function checkAndEnqueueRecurringJobs() {
@@ -232,7 +232,7 @@ async function FirstTimeCheckAndEnqueueRecurringJobs() {
                     }
                 })
                 console.log("processing job", response?.id);
-            }, arrayOfRecurringJobs[i].recurringJobsInterval)
+            }, arrayOfRecurringJobs[i].recurringJobsInterval * 1000)
         }
     }
 

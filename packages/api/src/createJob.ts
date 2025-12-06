@@ -67,7 +67,7 @@ async function startServer() {
                     type,
                     payload,
                     maxAttempts,
-                    runAfter: runAfter ? new Date(runAfter) : null,
+                    runAfter: runAfter ? new Date(runAfter).toISOString() : null,
                 }
             })
             const now = new Date();
