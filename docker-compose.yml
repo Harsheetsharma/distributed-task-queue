@@ -1,6 +1,42 @@
 version: "5.3"
 
 services:
+
+  distributed-task-project:
+    image: distributed-task-project
+    build:
+      context: .
+      dockerfile: Dockerfile   # root Dockerfile (Next.js)
+    ports: 
+      - "3000:3000"
+    depends_on:
+      - api
+      - worker
+      - postgres
+      - redis
+
+  api: 
+    image: distributed-api
+    build:
+      context: ./packages/api
+      dockerfile: Dockerfile
+    ports: 
+      - "4000:4000"
+    environment:
+      DATABASE_URL: postgres://dev:dev@postgres:5432/dtq
+      REDIS_URL: redis://redis:6379
+
+
+  worker: 
+    image: distributed-worker
+    build:
+      context: ./packages/worker
+      dockerfile: Dockerfile   # Dockerfile inside packages/worker
+    environment:
+      DATABASE_URL: postgres://dev:dev@postgres:5432/dtq
+      REDIS_URL: redis://redis:6379
+
+      
   postgres: 
     image: postgres:15
     environment:
