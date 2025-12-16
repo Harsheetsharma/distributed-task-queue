@@ -167,6 +167,7 @@ export default function () {
         <div>
           createJob{" "}
           <button
+            className="p-2 font-semibold shadow-md border-2 border-black mt-1"
             onClick={() => {
               setTringgerHover(true);
             }}
